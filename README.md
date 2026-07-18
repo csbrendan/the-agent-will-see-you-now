@@ -1,4 +1,4 @@
-# MedBridge
+# MedBridge: The Agent Will See You Now
 
 **An audiovisual AI co-clinician for time-critical neurological screening and clinical workflow verification—from bedside to field.**
 
