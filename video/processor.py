@@ -111,26 +111,48 @@ class Observability(str, Enum):
 
 
 class SamplingProfile(str, Enum):
-    """Frame-budget class. Concrete counts live in FRAME_BUDGET so they can be tuned in
-    one place. Ranges follow research_and_eval/NINDS_dataset.md §4."""
+    """Frame-budget class. Concrete budgets live in FRAME_BUDGET so they can be tuned in one
+    place. Temporal items use a frame RATE (not a flat total) — see FRAME_BUDGET."""
 
     NONE = "none"                    # 0 frames (speech items → audio path)
-    STATIC = "static"                # 2–4 frames: alertness, resting asymmetry
-    SEMI_TEMPORAL = "semi_temporal"  # ~5 key frames: facial-during-smile (baseline→active)
-    TEMPORAL = "temporal"            # 8–15 ordered frames: drift, gaze, ataxia
+    STATIC = "static"                # a few stills: alertness, resting asymmetry
+    SEMI_TEMPORAL = "semi_temporal"  # short maneuver (facial-during-smile): rate, small cap
+    TEMPORAL = "temporal"            # motion over time (drift, gaze, ataxia): rate, large cap
     RECORD_ONLY = "record_only"      # a couple frames for the audit log on non-assessable items
 
 
-# Concrete frame counts per profile. Kept small and centralised so latency/quality can be
-# tuned without touching the item table. 320x240 NINDS frames are ~100 tokens each, so even
-# TEMPORAL (12 frames) costs ~1.2k image tokens — cost is not the constraint here; reasoning
-# reliability over near-identical low-res stills and end-to-end latency are.
-FRAME_BUDGET: dict[SamplingProfile, int] = {
-    SamplingProfile.NONE: 0,
-    SamplingProfile.STATIC: 3,
-    SamplingProfile.SEMI_TEMPORAL: 5,
-    SamplingProfile.TEMPORAL: 12,
-    SamplingProfile.RECORD_ONLY: 2,
+class SamplingSpec(BaseModel):
+    """How many frames a profile pulls. Either a fixed `count`, or a frame `fps` applied
+    across the maneuver window and clamped to [1, max_frames]. Rate-based is the point for
+    temporal items: a flat total is too sparse on a long clip (12 frames over 66s ≈ one every
+    5.5s can't see a 10s drift), whereas a rate keeps sampling dense regardless of clip length."""
+
+    count: Optional[int] = None      # fixed number of frames (used when fps is None)
+    fps: Optional[float] = None      # frames per second across the window
+    max_frames: int = 1              # hard cap — also keeps us under Claude's ~100 images/request
+
+    def n_for(self, window_seconds: float) -> int:
+        if self.count is not None:
+            return max(0, self.count)
+        if not self.fps or window_seconds <= 0:
+            return 0
+        return max(1, min(int(round(self.fps * window_seconds)), self.max_frames))
+
+
+# Frame budget per profile. GENEROUS BY DESIGN: NINDS frames are ~100 tokens each, so we bias
+# toward MORE coverage and accept the small extra API cost — for temporal items it is better to
+# send too many frames than to miss the moment the arm hits the bed. Temporal/semi-temporal use
+# a rate; the cap stays well under Claude's ~100-images/request ceiling. Tunable via env without
+# touching the item table.
+_TEMPORAL_FPS = float(os.environ.get("MEDBRIDGE_TEMPORAL_FPS", "2.5"))
+_TEMPORAL_CAP = int(os.environ.get("MEDBRIDGE_TEMPORAL_MAX_FRAMES", "60"))
+
+FRAME_BUDGET: dict[SamplingProfile, SamplingSpec] = {
+    SamplingProfile.NONE: SamplingSpec(count=0),
+    SamplingProfile.STATIC: SamplingSpec(count=4),
+    SamplingProfile.SEMI_TEMPORAL: SamplingSpec(fps=2.5, max_frames=16),
+    SamplingProfile.TEMPORAL: SamplingSpec(fps=_TEMPORAL_FPS, max_frames=_TEMPORAL_CAP),
+    SamplingProfile.RECORD_ONLY: SamplingSpec(count=2),
 }
 
 
@@ -437,8 +459,9 @@ def extract_for_item(
             win_start, win_end = float(window[0]), float(window[1])
             skip_card = True   # full video: clear the title card first
 
-        # Decide the frame budget from the item policy, then apply any caller cap.
-        n_frames = FRAME_BUDGET[profile.sampling]
+        # Decide the frame budget from the item policy (rate applied to the window length for
+        # temporal items), then apply any caller cap.
+        n_frames = FRAME_BUDGET[profile.sampling].n_for(win_end - win_start)
         if max_frames is not None:
             n_frames = min(n_frames, max_frames)
 
