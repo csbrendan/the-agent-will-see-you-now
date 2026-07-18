@@ -83,6 +83,55 @@ MedBridge is intended to support visual, time-sensitive workflows in both clinic
 
 ---
 
+## Concept — "document what you see, not what you say"
+
+The core insight is simple: **the glasses see the exam, so nothing has to be spoken aloud to be
+captured.** A physician, nurse, resident, or attending wears the glasses and performs the exam
+normally. The agent observes, scores, and documents from what it sees — no dictation, no narration.
+We start with the **NIH Stroke Scale (NIHSS)** as the wedge, then expand to visual ambient
+documentation of the whole physical exam.
+
+> **Prototype vs. product vision — kept honest.** The hackathon build runs the pipeline on
+> **pre-recorded, gold-labeled NINDS NIHSS video**, not live smart-glasses. Glasses capture and EHR
+> write-back are the **productization path**; the demo proves the hard part — *scoring a structured
+> neuro exam from video, safety-verified* — on real footage. We never claim glasses hardware or
+> clinical validation we don't have.
+
+**The stroke use case (the beachhead).** Whoever reaches the patient first — nurse, resident, whoever
+— wears the glasses and performs the NIHSS. The agent scores it immediately, so a preliminary,
+standardized score is ready before the stroke team arrives. On a clock where minutes are brain, that
+time matters. The key unlock: when a code stroke is called, the stroke neurologist is often off-site;
+instead of a secondhand verbal description over the phone, they can remotely **"pass" the exam** —
+verifying the agent's scored results against captured video of what actually happened. That's a
+reliability upgrade over the status quo, and pulling the score right away standardizes something that
+is normally rater-dependent.
+
+**The platform play (the expansion).** Audio-only ambient scribes require doctors to narrate
+everything out loud — which they don't naturally do during a physical exam. Visual capture removes
+that requirement: the physician just examines the patient, and the findings land on the chart. This
+generalizes beyond stroke — rounds, skin lesions, any visible physical finding — auto-documented
+without dictation. NIHSS is the entry point because it's structured, scored, and has ground-truth
+training data. The thesis for everything after: **document what you see, not what you say.**
+
+### Why this fits the judges' evaluation framework
+
+Judges assess ideas on **VALUE · SUITABILITY · FEASIBILITY** (see [HACKATHON.md](HACKATHON.md) §5b):
+
+- **VALUE** *(speed & desire for adoption)* — **Repeatable** (NIHSS is a fixed exam run on every
+  stroke code), **ROI** (attacks door-to-needle time and manual documentation burden), **Logic-based**
+  (a rule-based scoring rubric, not an empathetic judgment call).
+- **SUITABILITY** *(long-term moats & unlocks)* — **Data Structure** (unlocks unstructured visual
+  exam data that never gets captured today), **Data Availability** (unifies exam video + agent scoring
+  + chart documentation into one record), **Data Durability** (proprietary paired exam-video +
+  ground-truth-score data accrues at scale).
+- **FEASIBILITY** *(ability to work)* — **Technology** (scoring a structured neuro exam from video is
+  within reach today; NINDS footage is gold-labeled ground truth), **Trust & safety** (physician
+  stays the accountable decision-maker — assistive, not autonomous — with remote-neurologist
+  validation and first-class consent/PHI handling), **Integration** (forward-deployed glasses
+  hardware + EHR write-back — the deployment surface that makes it sticky).
+
+---
+
 ## Why MedBridge?
 
 Most AI assistants generate an answer and send it directly to the user. That is not sufficient for safety-critical clinical workflows.
@@ -327,8 +376,8 @@ Both the original Talker proposal and the final displayed response are retained 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/csbrendan/MedBridge.git
-cd MedBridge
+git clone https://github.com/csbrendan/the-agent-will-see-you-now.git
+cd the-agent-will-see-you-now
 ```
 
 ### 2. Create a virtual environment

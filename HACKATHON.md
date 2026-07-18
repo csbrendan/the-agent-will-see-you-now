@@ -22,7 +22,7 @@ strategic implications for our build. Logistics (venue/address/schedule) omitted
 
 | Rule | Requirement | MedBridge action / flag |
 |---|---|---|
-| **Open source** | Repo **must be public** | ✅ `github.com/csbrendan/MedBridge` is already public |
+| **Open source** | Repo **must be public** | ✅ `github.com/csbrendan/the-agent-will-see-you-now` is already public |
 | **Team size** | **Max 2** (solo allowed) | Confirm team ≤ 2 |
 | **Demo = only what you built *during* the event** | Judges must clearly identify what was created **at the hackathon**. Unclear provenance = **immediate DQ** | 🔴 **Critical.** All current repo work (ProjectPlan, READMEs, dataset setup, smoke tests) is **pre-event scaffolding**, NOT hackathon output. The **product code must be built during the event**, and the demo/video must clearly delineate hackathon-built work. Treat existing files as environment, not as the deliverable to claim. |
 | **New work only** | May not present an existing project as your own | 🔴 Do **not** pitch "MedBridge" as if the pre-built plan is the hackathon build. Frame the hackathon as building *the working agent* on event day. |
@@ -112,19 +112,27 @@ toward it, and address it directly in the pitch.
 | | ROI | ✅✅ "Time is brain" — faster, consistent screening + triage; offloads repeated exams; missed/delayed stroke is enormously costly |
 | | Logic-based | ✅✅ NIHSS **is** a structured scoring rubric — logic-based, not empathetic |
 | **SUITABILITY** | Data Structure | ✅✅ Core unlock: turns an **unstructured audiovisual exam** into structured, source-attributed findings |
-| | Data Availability | ✅ Fuses multiple sources (frames + audio; extensible to EHR/FHIR) |
-| | Data Durability | ⚠️ We use public NINDS — **no proprietary-data moat today**. A deployed product accrues proprietary exam data over time; the near-term moat is the **architecture + safety layer**, not owned data |
-| **FEASIBILITY** | Technology | ⚠️/✅ Multimodal vision+audio is solvable today; fine-grained NIHSS **scoring** from low-res video is not fully — hence **screening support, not autonomous scoring** |
-| | Trust & safety | ✅✅ **Strongest axis** — the independent Safety Verifier + escalate-to-human **is** the compliance/trust story; never autonomous diagnosis |
-| | Integration | ✅ Deployable into tele-stroke / bedside triage as a "co-clinician that escalates to a human"; modest forward deployment |
+| | Data Availability | ✅ Unifies exam video + agent scoring + chart documentation into one record across the care team (frames + audio; extensible to EHR/FHIR) |
+| | Data Durability | ⚠️→✅ We use public NINDS today (**no proprietary moat yet**), but the glasses/ambient framing gives a real durability story: a deployed product accrues **proprietary paired exam-video + ground-truth-score data at scale** — a defensible moat. Near-term moat is still the **architecture + safety layer** |
+| **FEASIBILITY** | Technology | ⚠️/✅ Multimodal vision+audio is solvable today; fine-grained NIHSS **scoring** from low-res video is not fully — hence **screening support, not autonomous scoring**. Public NINDS footage supplies gold-labeled ground truth |
+| | Trust & safety | ✅✅ **Strongest axis** — the physician stays the accountable decision-maker (assistive, not autonomous); the independent Safety Verifier + escalate-to-human + **remote-neurologist validation** **is** the compliance/trust story; consent/PHI handling is first-class |
+| | Integration | ✅ Deployable into tele-stroke / bedside triage as a "co-clinician that escalates to a human"; the sticky surface is **forward-deployed glasses capture + EHR write-back** |
+
+> **Product framing that strengthens this mapping (from clinician/MD advice — see [concept.md](concept.md)):**
+> *the glasses see the exam, so nothing has to be spoken aloud to be captured.* A clinician wears the
+> glasses and performs the NIHSS normally; the agent scores it immediately (a standardized score ready
+> before the stroke team arrives) and an off-site neurologist can remotely **"pass" the exam** against
+> the captured video. NIHSS is the beachhead; the platform play is **visual ambient documentation of
+> the physical exam** — "document what you see, not what you say" — which is where audio-only ambient
+> scribes fall short. *(Hackathon build runs on pre-recorded NINDS video, not live glasses.)*
 
 **Pitch implications:**
 - **Lead with VALUE (all three strong) + Trust & Safety** — these are MedBridge's standout columns
   and map onto the official **Impact** and **Creativity** criteria.
-- **Pre-empt the two soft spots honestly:** *Data Durability* (moat is the architecture/safety layer
-  now; proprietary data accrues on deployment) and *Technology* (framed as **screening support with
-  human escalation**, not autonomous scoring — the Safety Verifier is exactly what makes the
-  technology limit safe).
+- **Pre-empt the two soft spots honestly:** *Data Durability* (near-term moat is the architecture/
+  safety layer; the proprietary paired video+score data moat accrues on deployment) and *Technology*
+  (framed as **screening support with human escalation**, not autonomous scoring — the Safety Verifier
+  is exactly what makes the technology limit safe).
 
 ## 6. How this rubric should steer MedBridge
 

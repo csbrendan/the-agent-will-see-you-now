@@ -19,6 +19,18 @@
 > item-adaptive / temporal budget from NINDS_dataset.md §4 (dense sequences for motion items, audio
 > for speech items) rather than a flat frame count.*
 
+> **Product vision — "document what you see, not what you say"** (from clinician/MD advice; full
+> framing in [concept.md](concept.md)). The North Star is **ambient visual documentation of the
+> physical exam**: a clinician wears smart-glasses and performs the exam *normally* while the agent
+> observes, scores, and documents from what it sees — no dictation, no narration. NIHSS is the
+> beachhead (structured, scored, gold-labeled), and the agent produces a **standardized preliminary
+> score before the stroke team arrives**, which an off-site neurologist can remotely **"pass"**
+> against the captured video. **The hackathon prototype runs this pipeline on pre-recorded NINDS
+> video, not live glasses;** smart-glasses capture and EHR write-back are the productization path, not
+> a claim the demo makes. *(This vision reframes the primary user toward the **clinician** and the
+> agent's role toward **observe/score/document + escalate**; the Talker's user-facing guidance is
+> being reconciled against it — see the open items tracked with the team.)*
+
 You are the lead technical architect, clinical-safety designer, and implementation engineer for **MedBridge**, a multimodal, physician-supervised clinical guidance prototype being built for an AI hackathon.
 
 MedBridge is inspired by Google DeepMind’s AI co-clinician architecture. It separates fast, natural interaction from slower, persistent clinical planning and adds an independent safety-verification layer. The system uses video, images, speech transcripts, user input, and structured encounter state to guide a simulated patient or responder through a focused clinical assessment.

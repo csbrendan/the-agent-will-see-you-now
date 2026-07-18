@@ -22,6 +22,74 @@ Judging guidance: [HACKATHON.md](HACKATHON.md) · Datasets:
 [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md) (primary),
 [research_and_eval/ProGait_Dataset.md](research_and_eval/ProGait_Dataset.md) (secondary).
 
+## Concept — "document what you see, not what you say"
+
+The core insight is simple: **the glasses see the exam, so nothing has to be spoken aloud to be
+captured.** A physician, nurse, resident, or attending wears the glasses and performs the exam
+normally. The agent observes, scores, and documents from what it sees — no dictation, no narration.
+
+We're starting with the **NIH Stroke Scale (NIHSS)** as the wedge, then expanding to visual ambient
+documentation of the whole physical exam.
+
+> **Prototype vs. product vision — kept honest.** The 7-hour hackathon build runs the pipeline on
+> **pre-recorded, gold-labeled NINDS NIHSS video** (uploaded clips), not live smart-glasses. The
+> glasses + EHR write-back are the **productization path / North Star** the architecture is designed
+> for; the demo proves the hard part — *scoring a structured neuro exam from video, safety-verified* —
+> on real footage. We never claim glasses hardware or clinical validation we don't have.
+
+### The stroke use case (the beachhead)
+
+Whoever reaches the patient first — nurse, resident, whoever — wears the glasses and performs the
+NIHSS. The agent scores it immediately, so a preliminary, standardized score is ready before the
+stroke team even arrives. On a clock where minutes are brain, that time matters.
+
+The key unlock: when a code stroke is called, the stroke neurologist is often off-site. Instead of
+relying on a secondhand verbal description over the phone, they can remotely **"pass" the exam** —
+verifying the agent's scored results against captured video of what actually happened. That's a
+reliability upgrade over the status quo, and pulling the score right away standardizes something that
+is normally rater-dependent.
+
+### The platform play (the expansion)
+
+The main weakness of audio-only ambient scribes is that doctors have to narrate everything out loud —
+and they don't naturally do that during a physical exam. Visual capture removes that requirement. The
+physician just examines the patient, and the findings land on the chart.
+
+This generalizes well beyond stroke: rounds, skin lesions, any visible physical finding —
+auto-documented without dictation. NIHSS is the entry point because it's structured, scored, and has
+ground-truth training data. The thesis for everything after is: **document what you see, not what you
+say.**
+
+### Why this fits the evaluation framework
+
+The judges evaluate high-impact agentic-AI ideas on **VALUE · SUITABILITY · FEASIBILITY**
+(see [HACKATHON.md](HACKATHON.md) §5b). MedBridge maps cleanly:
+
+**VALUE** — *speed & desire for adoption*
+- **Repeatable:** the NIHSS is a fixed, standardized exam run over and over on every stroke code —
+  ideal for automation.
+- **ROI:** attacks door-to-needle time (minutes = brain tissue) and eliminates manual documentation
+  burden — both expensive in time and outcomes.
+- **Logic-based:** NIHSS is a rule-based scoring rubric, not an empathetic judgment call —
+  well-suited to an agent.
+
+**SUITABILITY** — *long-term moats & unlocks*
+- **Data Structure:** unlocks unstructured visual exam data that today never gets captured beyond a
+  number on a chart.
+- **Data Availability:** unifies exam video, agent scoring, and chart documentation into one record
+  across the care team.
+- **Data Durability:** proprietary paired exam-video + ground-truth-score data accrues at scale as a
+  defensible moat.
+
+**FEASIBILITY** — *ability for the solution to work*
+- **Technology:** scoring a structured neuro exam from video is within reach of today's models, and
+  public NINDS NIHSS training footage provides gold-labeled ground truth.
+- **Trust and safety:** the physician remains the accountable decision-maker (assistive, not
+  autonomous); remote neurologist validation is built into the workflow. Consent/PHI handling is a
+  first-class requirement.
+- **Integration:** requires forward-deployed engineering for glasses hardware and EHR write-back —
+  the deployment surface that makes it sticky.
+
 ## Why this is not a "mere image classifier" (the anti-project line)
 
 The hackathon explicitly bars basic **image analyzers**, **Streamlit apps as the feature**, and
