@@ -1,13 +1,14 @@
 # MedBridge — Concept & Framing Summary
 
-> **Safety-verified acute stroke screening from an audiovisual neuro exam.** A patient, bedside
-> responder, or tele-neurology nurse captures a short **video clip — moving images *and* audio —**
-> of a focused neurological exam. MedBridge's **multimodal Evidence Extractor** fuses **Claude
-> vision over frame *sequences*** (facial asymmetry, arm *drift over time*, gaze tracking) with
-> **Whisper over the audio** (speech clarity, naming, commands) into source-attributed evidence;
-> the **Clinical Planner** works the NIH Stroke Scale one item at a time; the **Safety Verifier**
-> refuses to call an exam "normal" without the evidence to support it and fires an **emergency
-> escalation** on stroke red flags. Time-critical ✓ ("time is brain"), patient/responder-facing ✓,
+> **Safety-verified acute stroke screening from an audiovisual neuro exam — for clinical use.** A
+> **clinician** (nurse, resident, or attending) wearing smart-glasses performs a focused
+> neurological exam normally; MedBridge captures the resulting **video clip — moving images *and*
+> audio —** and its **multimodal Evidence Extractor** fuses **Claude vision over frame *sequences***
+> (facial asymmetry, arm *drift over time*, gaze tracking) with **Whisper over the audio** (speech
+> clarity, naming, commands) into source-attributed evidence; the **Clinical Planner** works the NIH
+> Stroke Scale one item at a time; the **Safety Verifier** refuses to call an exam "normal" without
+> the evidence to support it and fires an **emergency escalation** on stroke red flags. Time-critical
+> ✓ ("time is brain"), clinician-facing ✓ (the physician stays the accountable decision-maker),
 > *safer* (a missed or over-claimed stroke finding is the liability the Verifier prevents) ✓ — and
 > the **NINDS NIHSS videos** (public-domain, clinician-produced, auto-segmented into **218
 > gold-labeled item clips**) are the real product substrate + validation, **not** a side eval.
@@ -18,9 +19,8 @@
 > where an item needs them), through an **independent multi-agent safety architecture** —
 > categorically distinct from a single-prompt image analyzer or a dashboard.
 
-Judging guidance: [HACKATHON.md](HACKATHON.md) · Datasets:
-[research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md) (primary),
-[research_and_eval/ProGait_Dataset.md](research_and_eval/ProGait_Dataset.md) (secondary).
+Judging guidance: [HACKATHON.md](HACKATHON.md) · Dataset:
+[research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md) (the NINDS NIHSS videos).
 
 ## Concept — "document what you see, not what you say"
 
@@ -125,20 +125,19 @@ Flow: `Listener + Visual Extractor → Encounter State → Clinical Planner → 
 (`video/`, `audio/`, `api/`, `models/`, `services/`, `research_and_eval/`); only `workflows/*.yaml`
 + `prompts/` + the eval dataset change per task.
 
-## Datasets — NINDS primary, ProGait secondary
+## Dataset — NINDS NIHSS
 
-| | **NINDS NIHSS** (primary) | **ProGait** (secondary, if time) |
-|---|---|---|
-| Role | **Clinical demo + on-workflow gold substrate** | Scale eval + "generalizes" story |
-| Access | Direct MP4, **no gating** | Gated (accept-once), already downloaded |
-| Rights | **CC0 public domain** (best) | CC-BY-NC-SA-4.0 |
-| Fit | **Exact** — the NIHSS neuro exam | Gait/mobility |
-| Gold | 218 auto-segmented item clips + labels | 150 gait deviation labels |
-| Modality | **audiovisual** (frames + speech) | video (frames) |
+| | **NINDS NIHSS** |
+|---|---|
+| Role | **Clinical demo + on-workflow gold substrate** |
+| Access | Direct MP4, **no gating** (Internet Archive) |
+| Rights | **CC0 public domain** (best possible posture) |
+| Fit | **Exact** — the NIHSS neuro exam itself |
+| Gold | 218 auto-segmented item clips + labels |
+| Modality | **audiovisual** (frames + speech) |
 
-We **demo on NINDS** (real exam, gold item labels, public domain, audiovisual) and, **later in the
-day if time allows**, run the scale eval on **ProGait** to show the architecture generalizes across
-movement-analysis tasks.
+We **demo on NINDS** — a real, clinician-produced neurological exam with gold item labels, public
+domain, audiovisual. It is the exact clinical workflow the product targets, not a proxy.
 
 ## Multimodal Evidence Extractor (frame + audio + motion)
 
@@ -165,4 +164,4 @@ Technical (20%) + Impact (20%).
 - Focus items for the demo: **Facial Palsy (asymmetry)** + **Motor Arm (drift, temporal)** +
   one **speech item via Whisper** (e.g. Language or Dysarthria) — showcases visual, temporal, and
   audio in one flow.
-- Eval: item-level ablation on the NINDS gold manifest; ProGait scale-eval only if time remains.
+- Eval: item-level ablation on the NINDS gold manifest.

@@ -1,18 +1,18 @@
 # MedBridge Project Instruction
 
-> **Framing — Safety-verified acute stroke screening from an audiovisual neuro exam.** A patient,
-> bedside responder, or tele-neurology nurse captures a short **video clip — moving images *and*
-> audio —** of a focused neurological exam. MedBridge's **multimodal Evidence Extractor** fuses
-> **Claude vision over frame *sequences*** (facial asymmetry, arm *drift over time*, gaze) with
-> **Whisper over the audio** (speech, naming, commands) into source-attributed evidence; the
-> **Clinical Planner** works the NIH Stroke Scale one item at a time; the **Safety Verifier** refuses
-> to call an exam "normal" without the evidence to support it and fires an **emergency escalation**
-> on red flags. **This is audiovisual, temporal video understanding through an independent
-> multi-agent safety architecture — NOT a single-prompt image classifier, RAG app, or dashboard**
-> (see the hackathon anti-project rules in [HACKATHON.md](HACKATHON.md)). Primary dataset: the
-> public-domain **NINDS NIHSS videos** (auto-segmented into 218 gold-labeled item clips,
-> [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)); ProGait is the secondary
-> scale-eval. See also [concept.md](concept.md).
+> **Framing — Safety-verified acute stroke screening from an audiovisual neuro exam, for clinical
+> use.** A **clinician** (nurse, resident, or attending) performs a focused neurological exam
+> normally; MedBridge captures the resulting short **video clip — moving images *and* audio —** and
+> its **multimodal Evidence Extractor** fuses **Claude vision over frame *sequences*** (facial
+> asymmetry, arm *drift over time*, gaze) with **Whisper over the audio** (speech, naming, commands)
+> into source-attributed evidence; the **Clinical Planner** works the NIH Stroke Scale one item at a
+> time; the **Safety Verifier** refuses to call an exam "normal" without the evidence to support it
+> and fires an **emergency escalation** on red flags. **This is audiovisual, temporal video
+> understanding through an independent multi-agent safety architecture — NOT a single-prompt image
+> classifier, RAG app, or dashboard** (see the hackathon anti-project rules in
+> [HACKATHON.md](HACKATHON.md)). Dataset: the public-domain **NINDS NIHSS videos** (auto-segmented
+> into 218 gold-labeled item clips, [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)).
+> See also [concept.md](concept.md).
 >
 > *Note: sections below describe the general architecture. Where they say "neurological screening"
 > read it as the audiovisual NIHSS workflow above; where they scope frame sampling, apply the
@@ -33,7 +33,7 @@
 
 You are the lead technical architect, clinical-safety designer, and implementation engineer for **MedBridge**, a multimodal, physician-supervised clinical guidance prototype being built for an AI hackathon.
 
-MedBridge is inspired by Google DeepMind’s AI co-clinician architecture. It separates fast, natural interaction from slower, persistent clinical planning and adds an independent safety-verification layer. The system uses video, images, speech transcripts, user input, and structured encounter state to guide a simulated patient or responder through a focused clinical assessment.
+MedBridge is inspired by Google DeepMind’s AI co-clinician architecture. It separates fast, natural interaction from slower, persistent clinical planning and adds an independent safety-verification layer. The system uses video, images, speech transcripts, clinician input, and structured encounter state to observe and document a clinician-performed focused clinical assessment.
 
 The primary objective is to build a convincing, reliable, inspectable end-to-end demonstration—not a production medical device.
 
@@ -257,20 +257,20 @@ A strong scenario should include:
 * Recognition of red flags
 * Immediate emergency escalation when indicated
 
-A secondary workflow may demonstrate CPR or another emergency procedure, but CPR should not be the sole primary demonstration because it provides less opportunity to show persistent reasoning, dynamic goal selection, examination recovery, and multimodal evidence integration.
+The engine is workflow-agnostic, so once the NIHSS workflow is solid the same observe → document →
+safety-verify loop extends to other **clinical, visible physical-exam findings** captured during
+normal care.
 
-Other acceptable future workflows include:
+Other acceptable future clinical workflows include:
 
-* Respiratory-distress observation
-* Inhaler-technique verification
-* Recovery-position guidance
-* Bleeding control
-* Choking response
-* Epinephrine autoinjector verification
+* Ward-rounds exam documentation
+* Skin / wound / lesion observation
+* Other structured neurological and physical-exam maneuvers
 
 For the hackathon, implement one workflow deeply before adding another.
 
-Do not attempt general diagnosis or an unrestricted virtual doctor.
+Do not attempt general diagnosis or an unrestricted virtual doctor. MedBridge is **assistive** — the
+clinician remains the accountable decision-maker.
 
 ## Medical Safety Boundaries
 
@@ -328,8 +328,6 @@ Use approximately one sampled frame per second for ordinary observation, with sh
 
 Do not claim that sparse image sampling precisely measures:
 
-* CPR cadence
-* Compression depth
 * Exact examination duration
 * Fine motor movement
 * Respiratory rate
@@ -720,8 +718,7 @@ models/
     evaluation.py
 
 workflows/
-    neurological_screen.yaml
-    cpr.yaml
+    nihss_screen.yaml
     loader.py
 
 prompts/
@@ -825,8 +822,8 @@ Add:
 
 Only after the vertical slice works, consider:
 
-* CPR workflow
-* Webcam input
+* Additional clinical exam-documentation workflows (rounds, skin/wound findings)
+* Live glasses / webcam input
 * Speech-to-text
 * Text-to-speech
 * Additional clinical workflows

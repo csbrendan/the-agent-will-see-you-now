@@ -1,15 +1,15 @@
-# Potential Datasets for MedBridge
+# Potential Datasets for MedBridge — superseded research record
 
-> **Decision (current):** the **primary dataset is NINDS NIHSS** (public-domain audiovisual stroke
-> exam, auto-segmented into 218 gold-labeled item clips — see
-> [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)). **ProGait** is the
-> **secondary** scale-eval ([research_and_eval/ProGait_Dataset.md](research_and_eval/ProGait_Dataset.md)),
-> run later if time permits. The screening notes below are retained as the research record that led
-> to that choice.
+> **Decision (final):** the **only dataset is NINDS NIHSS** (public-domain audiovisual stroke exam,
+> auto-segmented into 218 gold-labeled item clips — see
+> [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)). MedBridge is now a
+> **clinical-use** ambient documentation co-clinician (a clinician performs the NIHSS; the agent
+> observes/scores/documents). The rehab / exercise / CPR / gait "observe-and-coach" survey below is a
+> **superseded exploratory record** — those directions were dropped (they pattern-matched the
+> image-analyzer + sports-coach anti-projects and are not clinical). Kept only for provenance.
 
-Candidate **public medical/clinical video datasets** for the MedBridge multimodal
-co-clinician prototype, screened for the "observe → reason → ask follow-up → coach"
-loop described in [ProjectPlan.md](ProjectPlan.md).
+Candidate **public medical/clinical video datasets** originally screened for an "observe → reason →
+ask follow-up → coach" loop — **no longer the direction** (see the decision banner above).
 
 > **Status:** research shortlist, not a committed choice. Figures are as reported by the
 > screening pass (checked 2026-07-18); some were independently confirmed on Hugging Face /
@@ -55,8 +55,7 @@ Access legend: 🟢 immediate · 🟡 registration/email/permission · 🔴 rest
 | 4 | **REHAB24-6** | Physical therapy / form correctness | ✅ RGB | 🟢 Zenodo | CC BY-NC 4.0 (academic/non-profit) | **Very high** | [Zenodo](https://zenodo.org/) |
 | 5 | **Keraal** | Low-back-pain rehab | ✅ RGB (mp4/avi) | 🟢 author-hosted | BSD-2 (repo); data page recheck | Medium-high | [GitHub](https://github.com/) |
 | 6 | **UCO Physical Rehab** | Rehabilitation | ✅ per-camera avi | 🟡 email request | Unclear on repo | Medium | GitHub (AVA group) |
-| 7 | **Health&Gait** | Gait / mobility | ✅ RGB | 🟢 Zenodo | GPL-3.0 repo / open Zenodo | High | GitHub + Zenodo |
-| 8 | **MedVideoCap-55K** | Broad medical corpus | ✅ video zips | 🟢 Hugging Face | Apache-2.0 (not for clinical use) | High (integration) | `FreedomIntelligence/MedVideoCap-55K` ✔ on HF |
+| 7 | **MedVideoCap-55K** | Broad medical corpus | ✅ video zips | 🟢 Hugging Face | Apache-2.0 (not for clinical use) | High (integration) | `FreedomIntelligence/MedVideoCap-55K` ✔ on HF |
 | 9 | **MM-Fit** | Exercise monitoring | ✅ RGB (39 GB) | 🟢 Zenodo | CC BY 4.0 | High | Zenodo |
 | 10 | **K3Da** | Balance / frailty mobility | ⚠️ depth+skeleton only | 🟢 Dropbox | Free non-commercial | Medium | Project page |
 | 11 | **KINECAL** | Falls-risk / balance | ⚠️ depth+skeleton only | 🟢 PhysioNet | Open (PhysioNet) | Medium | PhysioNet |

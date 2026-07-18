@@ -1,13 +1,14 @@
 # NINDS NIHSS — Primary Dataset & Findings
 
-> **Safety-verified acute stroke screening from an audiovisual neuro exam.** A patient, bedside
-> responder, or tele-neurology nurse captures a short **video clip — moving images *and* audio —**
-> of a focused neurological exam. MedBridge's **multimodal Evidence Extractor** fuses **Claude
-> vision over frame *sequences*** (facial asymmetry, arm *drift over time*, gaze tracking) with
-> **Whisper over the audio** (speech clarity, naming, commands) into source-attributed evidence;
-> the **Clinical Planner** works the NIH Stroke Scale one item at a time; the **Safety Verifier**
-> refuses to call an exam "normal" without the evidence to support it and fires an **emergency
-> escalation** on stroke red flags. Time-critical ✓ ("time is brain"), patient/responder-facing ✓,
+> **Safety-verified acute stroke screening from an audiovisual neuro exam — for clinical use.** A
+> **clinician** (nurse, resident, or attending) performs a focused neurological exam normally, and
+> MedBridge captures the resulting short **video clip — moving images *and* audio —**. Its
+> **multimodal Evidence Extractor** fuses **Claude vision over frame *sequences*** (facial asymmetry,
+> arm *drift over time*, gaze tracking) with **Whisper over the audio** (speech clarity, naming,
+> commands) into source-attributed evidence; the **Clinical Planner** works the NIH Stroke Scale one
+> item at a time; the **Safety Verifier** refuses to call an exam "normal" without the evidence to
+> support it and fires an **emergency escalation** on stroke red flags. Time-critical ✓ ("time is
+> brain"), clinician-facing ✓ (the physician stays the accountable decision-maker),
 > *safer* (a missed or over-claimed stroke finding is the liability the Verifier prevents) ✓ — and
 > the **NINDS NIHSS videos** (public-domain, clinician-produced, auto-segmented into **218
 > gold-labeled item clips**) are the real product substrate + validation, **not** a side eval.
@@ -18,8 +19,7 @@
 > features where an item needs them), through an **independent multi-agent safety architecture** —
 > categorically distinct from a single-prompt image analyzer or a dashboard.
 
-This is the **primary** dataset. [ProGait](ProGait_Dataset.md) is the secondary/scale-eval
-substrate, analyzed later in the day if time permits.
+This is the **only** dataset MedBridge uses — the exact clinical workflow the product targets.
 
 ---
 
@@ -29,8 +29,8 @@ The official **NINDS NIH Stroke Scale (NIHSS) training & certification videos** 
 footage of physicians performing the NIHSS on real patients, released by the US National Institute
 of Neurological Disorders and Stroke and hosted free on the Internet Archive.
 
-- **License: CC0 1.0 Public Domain** (US federal work) — no consent/PHI/licensing friction. Best
-  possible rights posture; **strictly better than ProGait's CC-BY-NC-SA**.
+- **License: CC0 1.0 Public Domain** (US federal work) — no consent/PHI/licensing friction. The
+  best possible rights posture, with no attribution or commercial constraints.
 - **Access: direct MP4 download, no gating** — `https://archive.org/download/<id>/<id>_512kb.mp4`.
 - **Why it fits MedBridge exactly:** it *is* the neuro exam our primary workflow scopes — **facial
   symmetry, arm/leg drift, gaze, visual fields, speech/language, dysarthria, commands, alertness,
@@ -153,8 +153,8 @@ No Claude-only requirement exists; all chosen models are rights-clean.
 ## 6. Caveats
 
 - **Low resolution (320×240)** — fine for gross observations (posture, gross movement, examiner
-  interaction, resting asymmetry); limited for *fine* facial detail. ProGait offers higher-fidelity
-  perception at scale for the generalization story.
+  interaction, resting asymmetry); limited for *fine* facial detail. Higher-resolution glasses
+  capture at deployment would improve fine-grained perception.
 - **Small patient-n (19)** at the patient level; but **~180+ observations at the item level**
   (19 patients × ~11 items) → adequate for item-level eval.
 - **Sensory/Dysarthria under-segmented** (8/19, 5/19) — refine OCR density if those items matter.

@@ -10,12 +10,13 @@ independent safety-verification layer. Perception, state, planning, communicatio
 verification, routing, and logging are **explicit modules with typed (Pydantic)
 interfaces** — never one large prompt or one unconstrained agent.
 
-> **Framing & positioning.** MedBridge is an **audiovisual, temporal** co-clinician — it reasons
-> over **moving-image sequences + audio** (not stills), for the primary workflow of **NIHSS acute
-> stroke screening** on the public-domain NINDS videos (see
-> [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md); ProGait gait is the
-> secondary scale-eval). This is deliberately **not** a single-prompt image classifier, RAG app, or
-> dashboard (hackathon anti-projects — [HACKATHON.md](HACKATHON.md)). See [concept.md](concept.md).
+> **Framing & positioning.** MedBridge is an **audiovisual, temporal** co-clinician **for clinical
+> use** — a clinician performs the exam, and it reasons over the resulting **moving-image sequences +
+> audio** (not stills), for the primary workflow of **NIHSS acute stroke screening** on the
+> public-domain NINDS videos (see
+> [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)). This is deliberately
+> **not** a single-prompt image classifier, RAG app, or dashboard (hackathon anti-projects —
+> [HACKATHON.md](HACKATHON.md)). See [concept.md](concept.md).
 
 ## Pipeline
 
@@ -108,23 +109,22 @@ interaction inside the selected workflow.
 
 Manages **dynamic goals** (added · prioritized · retained · suspended · resumed ·
 completed · abandoned-with-reason · superseded by emergency) — not a rigid checklist.
-Produces **structured guidance for the Talker**, not the final patient-facing response.
+Produces **structured guidance for the Talker**, not the final clinician-facing response.
 Makes uncertainty explicit; never presents a differential as a diagnosis.
 
 Model: `MEDBRIDGE_PLANNER_MODEL` (capable reasoning config when latency permits).
 
 ## 4. Talker
 
-Fast, user-facing conversational agent. Receives the current plan, encounter state,
-recent evidence, a short rolling conversation window, the latest transcript, known
-evidence limitations, and prior verifier feedback when relevant. Converts the Planner's
-selected goal into a concise, natural instruction/question.
+Fast, clinician-facing agent. Receives the current plan, encounter state, recent
+evidence, a short rolling context window, the latest transcript, known evidence
+limitations, and prior verifier feedback when relevant. Converts the Planner's selected
+goal into a concise clinician-facing prompt or documented finding.
 
-Messages are short · direct · calm · easy to follow under stress · **one primary action
-at a time** · jargon-free · explicit about uncertainty · explicit about emergency
-escalation. Generally avoids multiple questions at once. Requests repositioning,
-repetition, or verbal confirmation when evidence is insufficient — unless that would
-delay a critical lifesaving action.
+Messages are short · direct · **one primary action at a time** · clinically precise ·
+explicit about uncertainty · explicit about emergency escalation. Generally avoids
+multiple prompts at once. Requests a better view or re-capture when evidence is
+insufficient — unless that would delay a critical, time-sensitive action.
 
 Must never claim: a step was completed just because it was requested · a visual finding
 is confirmed without evidence · a serious condition is ruled out · a diagnosis · a

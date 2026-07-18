@@ -1,6 +1,6 @@
 # MedBridge: The Agent Will See You Now
 
-**An audiovisual AI co-clinician for time-critical neurological screening and clinical workflow verification—from bedside to field.**
+**An audiovisual AI co-clinician for time-critical neurological screening and clinical documentation—for clinical use, at the bedside.**
 
 ```text
               AUDIOVISUAL CLIP  (frame sequences + audio)
@@ -44,15 +44,16 @@ agents, each a **separate model call with its own prompt and typed (Pydantic) I/
 | **Safety Verifier** | independently checks the exact message; blocks unsupported "normal" calls; escalates red flags | **Claude Opus 4.8** (high effort) |
 | **Response Router** | deterministic app code — decides what actually reaches the user | *(no model)* |
 
-> **Safety-verified acute stroke screening from an audiovisual neuro exam.** A patient, bedside
-> responder, or tele-neurology nurse captures a short **video clip — moving images *and* audio —**
-> of a focused neurological exam. MedBridge's **multimodal Evidence Extractor** fuses **Claude vision
-> over frame *sequences*** (facial asymmetry, arm *drift over time*, gaze tracking) with **Whisper
-> over the audio** (speech clarity, naming, commands) into source-attributed evidence; the
-> **Clinical Planner** works the NIH Stroke Scale one item at a time; the **Safety Verifier** refuses
-> to call an exam "normal" without the evidence to support it and fires an **emergency escalation**
-> on stroke red flags. Time-critical ✓ ("time is brain"), patient/responder-facing ✓, *safer* (a
-> missed or over-claimed stroke finding is the liability the Verifier prevents) ✓ — grounded on the
+> **Safety-verified acute stroke screening from an audiovisual neuro exam — for clinical use.** A
+> **clinician** (nurse, resident, or attending) performs a focused neurological exam normally;
+> MedBridge captures the resulting **video clip — moving images *and* audio —** and its **multimodal
+> Evidence Extractor** fuses **Claude vision over frame *sequences*** (facial asymmetry, arm *drift
+> over time*, gaze tracking) with **Whisper over the audio** (speech clarity, naming, commands) into
+> source-attributed evidence; the **Clinical Planner** works the NIH Stroke Scale one item at a time;
+> the **Safety Verifier** refuses to call an exam "normal" without the evidence to support it and
+> fires an **emergency escalation** on stroke red flags. Time-critical ✓ ("time is brain"),
+> clinician-facing ✓ (the physician stays the accountable decision-maker), *safer* (a missed or
+> over-claimed stroke finding is the liability the Verifier prevents) ✓ — grounded on the
 > public-domain **NINDS NIHSS videos**, auto-segmented into **218 gold-labeled item clips**.
 >
 > **This is video understanding, not image classification.** The exam is inherently **audiovisual
@@ -62,7 +63,7 @@ agents, each a **separate model call with its own prompt and typed (Pydantic) I/
 > analyzer or dashboard. See [concept.md](concept.md) and
 > [research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md).
 
-MedBridge is an open-source research prototype that uses multimodal AI to observe a simulated clinical encounter, maintain a structured encounter state, plan the next clinical goal, guide a patient or responder through one action at a time, and independently review its own instructions for safety before they are shown.
+MedBridge is an open-source research prototype that uses multimodal AI to observe a clinician-performed clinical encounter, maintain a structured encounter state, plan the next clinical goal, observe and document the exam one item at a time, and independently review anything it surfaces for safety before it is shown.
 
 The system is inspired by AI co-clinician research that separates fast, natural interaction from slower, persistent clinical planning, and adds an independent safety-verification layer. It uses video frames, images, speech transcripts, user input, and structured encounter state to guide a focused clinical assessment.
 
@@ -71,15 +72,15 @@ MedBridge separates perception, state management, planning, communication, verif
 - **Multimodal Evidence Extractor:** Converts frames, images, and transcripts into conservative, source-attributed observations.
 - **Encounter State:** A structured record maintained outside the models; all changes are validated by application code.
 - **Clinical Planner:** Persistent clinical reasoning and goal management; selects the next clinical goal (runs *before* the Talker).
-- **Talker:** Gives concise, calm, one-action-at-a-time guidance to the user.
+- **Talker:** Turns the plan into one concise, clinician-facing prompt — e.g. requesting a better view when evidence is insufficient, or surfacing a documented finding for review.
 - **Safety Verifier:** Independently checks the exact proposed response for omissions, unsupported claims, unsafe instructions, and emergency red flags.
 - **Response Router:** Approves, revises, blocks, or replaces the proposed response with an emergency override.
 
 > **Canonical spec:** [`ProjectPlan.md`](ProjectPlan.md) is the authoritative product and architecture specification. Operational guidance for AI coding assistants lives in [`CLAUDE.md`](CLAUDE.md), and the agent-pipeline contract in [`AGENTS.md`](AGENTS.md). Where any document disagrees, ProjectPlan.md wins.
 
-MedBridge is intended to support visual, time-sensitive workflows in both clinical and field environments, including hospitals, ambulances, remote locations, disaster-response settings, and advanced emergency kits.
+MedBridge is intended to support visual, time-sensitive workflows in clinical environments — emergency departments, stroke units, inpatient wards, and tele-neurology — where a clinician performs the exam and the agent documents and safety-checks what it observes.
 
-> **Important:** MedBridge is an experimental hackathon and research prototype. It is not a medical device, has not been clinically validated, and must not replace emergency services, trained responders, or licensed medical professionals.
+> **Important:** MedBridge is an experimental hackathon and research prototype. It is not a medical device, has not been clinically validated, and must not replace emergency services, clinical judgment, or licensed medical professionals.
 
 ---
 
@@ -184,45 +185,33 @@ For example, MedBridge should not report that a neurological examination is norm
 
 ## Hackathon Scope
 
-The initial prototype focuses on one visual, time-sensitive workflow implemented deeply rather than many workflows implemented superficially.
+The initial prototype focuses on one clinical, time-sensitive workflow implemented deeply rather than many workflows implemented superficially.
 
-The **primary demonstration is neurological emergency screening**, because it clearly benefits from multimodal perception and persistent clinical goal management. A secondary CPR workflow may follow, but CPR is not the sole primary demonstration—it offers less opportunity to show persistent reasoning, dynamic goal selection, examination recovery, and multimodal evidence integration.
+The **primary demonstration is acute stroke / NIHSS screening**, performed by a clinician and documented by the agent, because it clearly benefits from multimodal perception and persistent clinical goal management.
 
-### Basic neurological and stroke screening (primary)
+### Acute stroke / NIHSS screening (primary)
 
 - Symptom onset and last-known-well time
-- Speech assessment / speech clarity
+- Speech assessment / speech clarity (Whisper)
 - Facial symmetry observation
-- Arm-drift guidance, with verification that both arms are visible
-- Verification that the test lasted long enough
+- Arm drift, with verification that both arms are visible for long enough
 - Ability to follow simple commands
-- Level of alertness
+- Level of alertness / responsiveness
 - Identification of uncertainty or asymmetry
-- Recognition of red flags
-- Immediate emergency escalation when indicated
+- Recognition of stroke red flags
+- Immediate emergency escalation (code stroke) when indicated
 
-### CPR support (secondary)
+### Future clinical workflows (the platform play)
 
-- Recognizing when emergency escalation is required
-- Guiding responsiveness and breathing checks without unnecessary delay
-- Prompting emergency-service activation and AED retrieval
-- Assessing visible hand position and rescuer posture
-- Detecting obvious interruptions in compressions
-- Providing concise, one-action-at-a-time guidance
-- Avoiding unsupported claims about pulse, exact compression depth, or physiological effectiveness
+MedBridge's engine is workflow-agnostic. Once the NIHSS workflow is solid, the same
+observe → document → safety-verify loop extends to other **visible physical-exam findings** captured
+during normal clinical care — for example:
 
-Future workflow definitions may cover:
+- Ward rounds documentation
+- Skin / wound / lesion observation
+- Other structured neurological and physical-exam maneuvers
 
-- Respiratory-distress observation
-- Inhaler-technique verification
-- Recovery-position guidance
-- Bleeding control
-- Choking response
-- Epinephrine autoinjector verification
-- Trauma, burn, heat illness, or hypothermia assessment
-- Emergency equipment verification
-
-Implement one workflow deeply before adding another. MedBridge does not attempt general diagnosis or an unrestricted virtual doctor.
+Implement one workflow deeply before adding another. MedBridge does not attempt general diagnosis or an unrestricted virtual doctor, and is **assistive** — the clinician remains the accountable decision-maker.
 
 ---
 
@@ -266,8 +255,7 @@ medbridge/
 │   └── evaluation.py
 │
 ├── workflows/
-│   ├── neurological_screen.yaml
-│   ├── cpr.yaml
+│   ├── nihss_screen.yaml
 │   └── loader.py
 │
 ├── prompts/
@@ -486,7 +474,6 @@ Because the current prototype operates on sampled images rather than continuous 
 - Pulse
 - Blood pressure
 - Oxygen saturation
-- Exact CPR compression depth or cadence
 - Internal injury
 - Neurological diagnosis
 - Clinical stability
@@ -503,9 +490,9 @@ Clinical procedures are represented as YAML configuration rather than being embe
 A workflow includes:
 
 ```yaml
-workflow_id: neurological_screen
-display_name: Neurological Emergency Screening
-intended_user: bystander_or_responder
+workflow_id: nihss_screen
+display_name: Acute Stroke / NIHSS Screening
+intended_user: clinician
 entry_conditions: []
 required_inputs: []
 initial_goals: []
@@ -525,15 +512,15 @@ Each examination step can specify:
 ```yaml
 step_id: assess_arm_drift
 sequence_number: 4
-instruction: Ask the patient to hold both arms straight out, palms up, for ten seconds.
+instruction: Observe the arm-drift maneuver — both arms extended, palms up, for ten seconds.
 expected_visual_evidence: []
-expected_user_confirmation:
-  - Both arms are visible in frame
+expected_capture_confirmation:
+  - Both arms are visible in frame for the full ten seconds
 safety_critical: true
 time_critical: false
 prerequisites: []
 failure_conditions: []
-retry_instruction: Reposition the camera so both arms are fully visible, then repeat.
+retry_instruction: Prompt the clinician to re-capture so both arms are fully visible for long enough.
 escalation_if_failed: emergency_override
 ```
 
@@ -750,7 +737,7 @@ MedBridge is an early research prototype with significant limitations:
 - [ ] Add bundled sample videos and pre-extracted frames
 - [ ] Add offline benchmark scenarios and ablation comparisons
 - [ ] Add session replay and export
-- [ ] Add a secondary CPR workflow
+- [ ] Extend to additional clinical exam-documentation workflows (rounds, skin/wound findings)
 - [ ] Add speech-to-text
 - [ ] Add text-to-speech
 - [ ] Evaluate temporal video models

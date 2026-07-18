@@ -10,15 +10,16 @@ See **[concept.md](concept.md)** for the current hackathon framing and
 
 ## What MedBridge is
 
-An **audiovisual, physician-supervised AI co-clinician** for a hackathon: it observes a short
-**video clip — moving-image sequences *and* audio —** of a focused neurological exam, maintains
-structured encounter state, plans the NIH Stroke Scale one item at a time, speaks one concise
-instruction, and **independently verifies** that instruction before it reaches the user.
+An **audiovisual, physician-supervised AI co-clinician** for a hackathon, **for clinical use**: a
+clinician performs a focused neurological exam normally; it observes the resulting short
+**video clip — moving-image sequences *and* audio —**, maintains structured encounter state, plans
+the NIH Stroke Scale one item at a time, surfaces one concise clinician-facing prompt or documented
+finding, and **independently verifies** it before it reaches the clinician. The clinician remains the
+accountable decision-maker (assistive, not autonomous).
 
 **Primary workflow:** audiovisual **acute stroke / NIHSS screening** on the public-domain
 **NINDS NIHSS videos** (auto-segmented into 218 gold-labeled item clips — see
-[research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)). ProGait gait is the
-secondary scale-eval, used later if time permits.
+[research_and_eval/NINDS_dataset.md](research_and_eval/NINDS_dataset.md)).
 
 > **Hackathon positioning — this is NOT (and must never be built/pitched as):** a single-prompt
 > **image classifier**, a **basic RAG** app, a **Streamlit-app-as-the-feature**, or a
@@ -128,7 +129,8 @@ python -m research_and_eval.runner
    Planner course-correction, Verifier revision, and emergency override.
 3. **Evaluation** — 5–10 synthetic scenarios, baseline/ablation comparisons,
    deterministic metrics, latency + token reporting, Markdown report.
-4. **Optional extensions** — CPR, webcam, STT/TTS, more workflows. Only after 1–3.
+4. **Optional extensions** — additional clinical exam-documentation workflows (rounds, skin/wound),
+   live glasses/webcam, STT/TTS. Only after 1–3.
 
 First workflow is **audiovisual NIHSS stroke screening** on the NINDS gold clips (best showcase
 for multimodal perception + persistent goals). Demo-focus items: **Facial Palsy (asymmetry)** +

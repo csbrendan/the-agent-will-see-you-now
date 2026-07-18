@@ -21,7 +21,8 @@ faster-whisper==1.2.1
 # Only needed to RE-run ninds_segmenter.py; skip on non-Mac.
 ocrmac==1.0.1
 
-# Datasets / Hugging Face (NINDS + ProGait pulls)
+# Hugging Face client — optional; only needed if pulling datasets from the Hub.
+# (NINDS itself is a direct MP4 download from the Internet Archive, no Hub access required.)
 datasets==4.5.0
 huggingface_hub==1.8.0
 

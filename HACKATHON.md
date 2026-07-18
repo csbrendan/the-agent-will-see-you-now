@@ -26,7 +26,7 @@ strategic implications for our build. Logistics (venue/address/schedule) omitted
 | **Team size** | **Max 2** (solo allowed) | Confirm team ≤ 2 |
 | **Demo = only what you built *during* the event** | Judges must clearly identify what was created **at the hackathon**. Unclear provenance = **immediate DQ** | 🔴 **Critical.** All current repo work (ProjectPlan, READMEs, dataset setup, smoke tests) is **pre-event scaffolding**, NOT hackathon output. The **product code must be built during the event**, and the demo/video must clearly delineate hackathon-built work. Treat existing files as environment, not as the deliverable to claim. |
 | **New work only** | May not present an existing project as your own | 🔴 Do **not** pitch "MedBridge" as if the pre-built plan is the hackathon build. Frame the hackathon as building *the working agent* on event day. |
-| **Rights to code/data/assets** | DQ if you use assets you don't have rights to | ⚠️ **ProGait is CC-BY-NC-SA-4.0** (non-commercial, attribution, share-alike). OK for a research/non-commercial demo *with attribution*, but must be cited and not commercialized. **Abridge's provided data (below) is the rights-clean, sponsor-blessed option.** |
+| **Rights to code/data/assets** | DQ if you use assets you don't have rights to | ✅ **NINDS NIHSS videos are CC0 public domain** (Internet Archive) — the best possible rights posture, no attribution/commercial constraints. It is the only dataset MedBridge uses. |
 
 ### 🚫 Anti-projects — STRICTLY NO (auto-risk of DQ / poor scoring)
 
@@ -43,11 +43,11 @@ strategic implications for our build. Logistics (venue/address/schedule) omitted
 > - **Streamlit** is named. Our stack defaulted to Streamlit. → Streamlit must **not** be the
 >   "main feature"; the **agentic architecture** must be unmistakably the substance. Consider a
 >   non-Streamlit frontend, or keep UI minimal and make the agents the star.
-> - **"Image Analyzers"** and **"Sports coaches"** are named. A **gait / exercise-form video
->   coach pattern-matches to BOTH** ("basic image analyzer" + "sports/exercise coach"). The
->   multimodal-rehab pivot is **risky** unless it is clearly a *safety-verified clinical agent
->   system*, not "an app that watches you exercise." This is a real reason to reconsider the
->   video direction vs. an operational-data agent.
+> - **"Image Analyzers"** is named. Our defense is unambiguous: MedBridge is an **audiovisual +
+>   temporal, multi-agent, safety-verified clinical agent** on a real neurological exam — categorically
+>   not a "basic image analyzer." Make the independent Safety Verifier + evidence-grounding the visible
+>   substance, not the perception call. *(We dropped the earlier gait/rehab direction, which
+>   pattern-matched to the "image analyzer" + "sports coach" traps.)*
 > - **Dashboard** must not be the centerpiece.
 
 ## 3. Provided resources
@@ -148,23 +148,26 @@ finished build over an ambitious broken one.** This is the decisive strategic in
 3. **Impact (20%) wants scale + real users.** Frame the workflow around a pain that hits *many*
    clinicians/patients (documentation burden, prior-auth, triage, care-gap closure), not a
    niche.
-4. **Data choice matters for rights + fit:** strongly consider the **Abridge FHIR/EHR encounter
-   data** — rights-clean, sponsor-aligned, operational, and it dodges the Streamlit/image-
-   analyzer/sports-coach anti-project traps that the video/gait direction risks.
+4. **Data choice matters for rights + fit:** we use the **CC0 public-domain NINDS NIHSS videos** —
+   rights-clean, the exact clinical workflow, and gold-labeled. Extensible to Abridge FHIR/EHR for
+   chart write-back. The defense against the image-analyzer trap is the audiovisual + temporal,
+   multi-agent, safety-verified framing (not the perception call in isolation).
 5. **Provenance discipline:** build the *product* during the event; the current repo is
    scaffolding. The 1-minute video and live demo must clearly show hackathon-built work.
 6. **Talk to Abridge clinicians early** to sharpen the workflow and pre-empt the deployability /
    liability questions in Q&A.
 
-## 7. Open strategic question this raises
+## 7. Direction — decided
 
-The rules meaningfully **reweight our earlier plan.** The multimodal-video / ProGait-gait
-direction now carries real anti-project risk (**image-analyzer + sports-coach adjacency**,
-Streamlit trap, CC-BY-NC license) and a steep Execution bar. Meanwhile Abridge hands us
-**rights-clean FHIR/EHR data** pointing straight at the operational examples the prompt names.
+**Resolved: a tightly scoped clinical workflow — audiovisual NIHSS stroke screening for clinical
+use.** MedBridge is an **ambient visual documentation** co-clinician: a clinician (nurse, resident,
+attending) performs the NIHSS exam normally while the agent observes, scores, and documents from what
+it sees — *"document what you see, not what you say"* (full framing in [concept.md](concept.md)). The
+earlier multimodal-gait direction is **dropped** (it pattern-matched the image-analyzer + sports-coach
+traps and carried a CC-BY-NC license); we use the **CC0 NINDS NIHSS videos** only.
 
-**The safety-verification architecture is the moat regardless of substrate.** The decision to
-make: apply it to (a) an **operational agent on Abridge's FHIR/EHR data** (prior-auth, referral/
-care-gap, encounter-to-action) — safest fit, best Execution/Impact odds; or (b) a **tightly
-scoped clinical workflow** that keeps a multimodal element but is clearly a *safety-verified
-agent system*, not an "image analyzer/coach." Decide this before building.
+**The safety-verification architecture is the moat regardless of substrate**, and it stays the
+centerpiece: the independent Safety Verifier catching unsupported "normal" claims and escalating to a
+human. NIHSS is the beachhead; the platform play is visual ambient documentation of the wider physical
+exam, extensible to Abridge FHIR/EHR for chart write-back. *(Hackathon build runs on pre-recorded
+NINDS video; smart-glasses capture is the productization path, not a demo claim.)*
