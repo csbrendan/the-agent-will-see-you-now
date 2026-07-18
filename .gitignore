@@ -1,0 +1,42 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.key
+secrets.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling / caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# MedBridge runtime artifacts
+research_and_eval/results/
+sample_data/videos/*
+sample_data/frames/*
+*.log
+session_logs/
+
+# NINDS eval data (large frames/manifests — regenerate via the scripts); keep the scripts tracked
+sample_data/ninds/*
+!sample_data/ninds/*.py
