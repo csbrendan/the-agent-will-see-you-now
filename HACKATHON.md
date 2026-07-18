@@ -108,7 +108,7 @@ toward it, and address it directly in the pitch.
 
 | Pillar | Criterion | MedBridge |
 |---|---|---|
-| **VALUE** | Repeatable | ✅✅ NIHSS is a standardized exam repeated constantly in EDs / stroke units / tele-neuro |
+| **VALUE** | Repeatable | ✅✅ NIHSS is a standardized exam repeated constantly in EDs / stroke units |
 | | ROI | ✅✅ "Time is brain" — faster, consistent screening + triage; offloads repeated exams; missed/delayed stroke is enormously costly |
 | | Logic-based | ✅✅ NIHSS **is** a structured scoring rubric — logic-based, not empathetic |
 | **SUITABILITY** | Data Structure | ✅✅ Core unlock: turns an **unstructured audiovisual exam** into structured, source-attributed findings |
@@ -116,7 +116,7 @@ toward it, and address it directly in the pitch.
 | | Data Durability | ⚠️→✅ We use public NINDS today (**no proprietary moat yet**), but the glasses/ambient framing gives a real durability story: a deployed product accrues **proprietary paired exam-video + ground-truth-score data at scale** — a defensible moat. Near-term moat is still the **architecture + safety layer** |
 | **FEASIBILITY** | Technology | ⚠️/✅ Multimodal vision+audio is solvable today; fine-grained NIHSS **scoring** from low-res video is not fully — hence **screening support, not autonomous scoring**. Public NINDS footage supplies gold-labeled ground truth |
 | | Trust & safety | ✅✅ **Strongest axis** — the physician stays the accountable decision-maker (assistive, not autonomous); the independent Safety Verifier + escalate-to-human + **remote-neurologist validation** **is** the compliance/trust story; consent/PHI handling is first-class |
-| | Integration | ✅ Deployable into tele-stroke / bedside triage as a "co-clinician that escalates to a human"; the sticky surface is **forward-deployed glasses capture + EHR write-back** |
+| | Integration | ✅ Deployable into bedside / ED stroke triage as a "co-clinician that escalates to a human"; the sticky surface is **forward-deployed glasses capture + EHR write-back** |
 
 > **Product framing that strengthens this mapping (from clinician/MD advice — see [concept.md](concept.md)):**
 > *the glasses see the exam, so nothing has to be spoken aloud to be captured.* A clinician wears the

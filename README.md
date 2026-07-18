@@ -78,7 +78,7 @@ MedBridge separates perception, state management, planning, communication, verif
 
 > **Canonical spec:** [`ProjectPlan.md`](ProjectPlan.md) is the authoritative product and architecture specification. Operational guidance for AI coding assistants lives in [`CLAUDE.md`](CLAUDE.md), and the agent-pipeline contract in [`AGENTS.md`](AGENTS.md). Where any document disagrees, ProjectPlan.md wins.
 
-MedBridge is intended to support visual, time-sensitive workflows in clinical environments — emergency departments, stroke units, inpatient wards, and tele-neurology — where a clinician performs the exam and the agent documents and safety-checks what it observes.
+MedBridge is intended to support visual, time-sensitive workflows in clinical environments — emergency departments, stroke units, and inpatient wards — where a clinician performs the exam and the agent documents and safety-checks what it observes.
 
 > **Important:** MedBridge is an experimental hackathon and research prototype. It is not a medical device, has not been clinically validated, and must not replace emergency services, clinical judgment, or licensed medical professionals.
 
