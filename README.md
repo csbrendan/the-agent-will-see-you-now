@@ -1,6 +1,9 @@
-# MedBridge: The Agent Will See You Now
+# MedBridge: The Agent Will (Really) SEE You Now
 
-**An audiovisual AI co-clinician for time-critical neurological screening and clinical documentation—for clinical use, at the bedside.**
+What is the pain point we are solving?
+The neuro exam drives a huge, time-critical decision, but the moment it's done it collapses into a single number and a note. The evidence behind it, and much of the exam itself, is never captured: audio ambient AI records the conversation, but not what the clinician sees and hears the patient do, because nobody narrates an exam out loud. MedBridge is an audiovisual co-clinical o the exam. Whoever's at the bedside runs the NIHSS their normal way; MedBridge watches and listens, produces a standardized, evidence-grounded score before the stroke team arrives, hands the off-site neurologist frame-linked findings to verify instead of a phone description, auto-documents the whole exam to the chart, and role-adaptively coaches a resident in training through a missed or under-timed step without ever touching the attending's workflow.
+
+**Medbridge: An audiovisual AI co-clinician for time-critical neurological screening and clinical documentation—for clinical use, at the bedside.**
 
 ```text
               AUDIOVISUAL CLIP  (frame sequences + audio)
