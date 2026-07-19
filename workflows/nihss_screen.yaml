@@ -1,0 +1,249 @@
+# Acute stroke / NIH Stroke Scale (NIHSS) audiovisual screening.
+# Drafted from the standard 11-item NIHSS. Item IDs match the NINDS auto-segmenter
+# (sample_data/ninds/ninds_segmenter.py) so evidence lines up 1:1 with real exam clips.
+workflow_id: nihss_screen
+display_name: Acute Stroke / NIHSS Screening
+intended_user: clinician
+
+entry_conditions:
+  - A clinician is present and performing (or has recorded) a focused neurological exam.
+  - Symptom onset / last-known-well time is known or being established.
+
+required_inputs:
+  - Video clip or frame sequence of the exam
+  - Per-item audio for speech items when available
+
+initial_goals:
+  - "1a"
+  - "1b"
+  - "1c"
+  - "2"
+  - "3"
+  - "4"
+  - "5"
+  - "6"
+  - "7"
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+
+allowed_goal_types:
+  - ask
+  - guide_exam
+  - observe
+  - clarify
+  - summarize
+  - escalate
+  - request_better_evidence
+
+examination_procedures:
+  - step_id: "1a"
+    sequence_number: 1
+    display_name: Level of Consciousness
+    instruction: Observe the patient's baseline alertness and responsiveness.
+    expected_visual_evidence: [eyes open, responsiveness to voice or stimulation]
+    expected_capture_confirmation: [patient's face and upper body visible]
+    safety_critical: true
+    time_critical: true
+    failure_conditions: [patient not visible, face obscured]
+    retry_instruction: Reposition so the patient's face and upper body are visible.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "1b"
+    sequence_number: 2
+    display_name: LOC Questions
+    instruction: Ask the patient their age and the current month; listen for the response.
+    expected_visual_evidence: []
+    expected_capture_confirmation: [audible patient response]
+    safety_critical: false
+    time_critical: false
+    prerequisites: ["1a"]
+    failure_conditions: [no audio, response inaudible]
+    retry_instruction: Ask again with the microphone closer to the patient.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "1c"
+    sequence_number: 3
+    display_name: LOC Commands
+    instruction: Ask the patient to open/close their eyes and then grip and release their hand.
+    expected_visual_evidence: [eyes opening/closing, hand grip/release]
+    expected_capture_confirmation: [both actions visible in frame]
+    safety_critical: false
+    time_critical: false
+    prerequisites: ["1b"]
+    failure_conditions: [hand or eyes out of frame during the command]
+    retry_instruction: Recapture with both hands and the face in frame.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "2"
+    sequence_number: 4
+    display_name: Best Gaze
+    instruction: Ask the patient to follow a finger or object with only their eyes, horizontally.
+    expected_visual_evidence: [conjugate gaze, gaze deviation, eye movement over time]
+    expected_capture_confirmation: [both eyes visible for the full movement]
+    safety_critical: true
+    time_critical: false
+    failure_conditions: [one eye out of frame, movement too brief]
+    retry_instruction: Recapture with both eyes visible for the full horizontal sweep.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "3"
+    sequence_number: 5
+    display_name: Visual Fields
+    instruction: Test each visual quadrant by bringing fingers in from the periphery.
+    expected_visual_evidence: [patient's response to peripheral stimulus per quadrant]
+    expected_capture_confirmation: [patient's face and examiner's hand visible]
+    safety_critical: false
+    time_critical: false
+    failure_conditions: [quadrants not fully tested, face obscured]
+    retry_instruction: Recapture, ensuring all four quadrants are tested in view.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "4"
+    sequence_number: 6
+    display_name: Facial Palsy
+    instruction: Ask the patient to show their teeth or smile, and raise their eyebrows.
+    expected_visual_evidence: [facial symmetry at baseline and during movement]
+    expected_capture_confirmation: [full face visible before and during the movement]
+    safety_critical: true
+    time_critical: true
+    failure_conditions: [face partially out of frame, movement too brief to assess]
+    retry_instruction: Ask the clinician to recapture with the full face visible throughout.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "5"
+    sequence_number: 7
+    display_name: Motor Arm
+    instruction: Both arms extended, palms up, held for a full ten seconds — observe for drift.
+    expected_visual_evidence: [downward drift trajectory over the full ten seconds]
+    expected_capture_confirmation: [both arms visible in frame for the full ten seconds]
+    safety_critical: true
+    time_critical: true
+    failure_conditions: [an arm leaves the frame, maneuver shorter than ten seconds]
+    retry_instruction: Prompt the clinician to re-capture so both arms are fully visible for long enough.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "6"
+    sequence_number: 8
+    display_name: Motor Leg
+    instruction: Each leg held at 30 degrees for a full five seconds — observe for drift.
+    expected_visual_evidence: [downward drift trajectory over the full five seconds, each leg]
+    expected_capture_confirmation: [tested leg visible in frame for the full five seconds]
+    safety_critical: true
+    time_critical: true
+    failure_conditions: [leg leaves the frame, maneuver shorter than five seconds]
+    retry_instruction: Prompt the clinician to re-capture so the leg is fully visible for long enough.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "7"
+    sequence_number: 9
+    display_name: Limb Ataxia
+    instruction: Finger-to-nose and heel-to-shin testing, each side.
+    expected_visual_evidence: [coordination/dysmetria during the maneuver]
+    expected_capture_confirmation: [tested limb visible for the full maneuver]
+    safety_critical: false
+    time_critical: false
+    failure_conditions: [limb out of frame during the maneuver]
+    retry_instruction: Recapture with the tested limb fully visible throughout.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "8"
+    sequence_number: 10
+    display_name: Sensory
+    instruction: Test pinprick or light touch sensation across limbs and trunk.
+    expected_visual_evidence: [patient's visible response to stimulus]
+    expected_capture_confirmation: [patient's reaction visible]
+    safety_critical: false
+    time_critical: false
+    failure_conditions: [reaction not visible]
+    retry_instruction: Recapture with the patient's face/limb reaction visible.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "9"
+    sequence_number: 11
+    display_name: Best Language
+    instruction: Ask the patient to name objects and describe a picture.
+    expected_visual_evidence: []
+    expected_capture_confirmation: [audible patient response]
+    safety_critical: true
+    time_critical: false
+    failure_conditions: [no audio, response inaudible]
+    retry_instruction: Ask again with the microphone closer to the patient.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "10"
+    sequence_number: 12
+    display_name: Dysarthria
+    instruction: Ask the patient to read a standard list of words aloud.
+    expected_visual_evidence: []
+    expected_capture_confirmation: [audible, clear patient speech]
+    safety_critical: false
+    time_critical: false
+    failure_conditions: [no audio, response inaudible]
+    retry_instruction: Ask again with the microphone closer to the patient.
+    escalation_if_failed: insufficient_evidence
+
+  - step_id: "11"
+    sequence_number: 13
+    display_name: Extinction/Inattention
+    instruction: Test double simultaneous stimulation (visual and tactile).
+    expected_visual_evidence: [patient's response to simultaneous stimuli]
+    expected_capture_confirmation: [patient's reaction visible]
+    safety_critical: false
+    time_critical: false
+    failure_conditions: [reaction not visible]
+    retry_instruction: Recapture with the patient's reaction visible.
+    escalation_if_failed: insufficient_evidence
+
+expected_evidence:
+  - Facial symmetry at baseline and during voluntary movement
+  - Arm and leg drift trajectories over the full maneuver duration
+  - Gaze and visual-field responses
+  - Speech clarity, naming, and command-following via audio transcript
+  - Level of consciousness and responsiveness
+
+red_flags:
+  - New facial asymmetry
+  - New unilateral arm or leg drift/weakness
+  - New gaze deviation or visual field cut
+  - New speech difficulty (aphasia or dysarthria)
+  - Decreased level of consciousness
+  - Symptom onset or last-known-well within the acute treatment window
+
+escalation_rules:
+  - red_flag: New facial asymmetry
+    escalation_level: emergency
+    instruction: Call emergency services now. This may be a stroke.
+  - red_flag: New unilateral arm or leg drift/weakness
+    escalation_level: emergency
+    instruction: Call emergency services now. This may be a stroke.
+  - red_flag: New speech difficulty (aphasia or dysarthria)
+    escalation_level: emergency
+    instruction: Call emergency services now. This may be a stroke.
+  - red_flag: Decreased level of consciousness
+    escalation_level: emergency
+    instruction: Call emergency services now. This may be a stroke.
+
+stop_conditions:
+  - Emergency escalation has fired
+  - The clinician ends the session
+  - The encounter exceeds the configured maximum duration without required evidence
+
+prohibited_actions:
+  - Diagnosing the patient
+  - Ruling out a serious condition
+  - Prescribing or recommending medication or dosing
+  - Instructing the user to ignore clinician advice or emergency services
+  - Claiming a step was completed without supporting evidence
+  - Inferring pulse, blood pressure, oxygen saturation, or internal injury from video
+
+completion_criteria:
+  - All thirteen items have a recorded finding (observed, uncertain, or unknown)
+  - No unresolved safety-critical items remain, or the encounter has escalated
+
+disclaimer: >
+  MedBridge is an experimental research prototype. It is not a medical device, has not
+  been clinically validated, and must not replace emergency services, clinical judgment,
+  or licensed medical professionals. The clinician remains the accountable
+  decision-maker.

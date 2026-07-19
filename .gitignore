@@ -40,3 +40,6 @@ session_logs/
 # NINDS eval data (large frames/manifests — regenerate via the scripts); keep the scripts tracked
 sample_data/ninds/*
 !sample_data/ninds/*.py
+
+# Partner-codebase import used for the merge (329MB, has its own .git) — never commit
+ALTCODEBASE/

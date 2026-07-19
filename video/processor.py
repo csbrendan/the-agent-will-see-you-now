@@ -70,7 +70,9 @@ import os
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+
+from models.media import ExtractedFrame, FrameBundle, Modality, Observability
 
 # OpenCV + NumPy are the only heavy deps. Fail loudly and usefully if the venv isn't set up,
 # rather than with an opaque ImportError three frames into a demo.
@@ -88,26 +90,9 @@ except ImportError as exc:  # pragma: no cover - environment guard
 # Item taxonomy — the observability + sampling policy, one row per NIHSS item.
 # This table is the single source of truth for "what may we look at, and can we even
 # assess this item from video?". Downstream code keys off `modality` / `observability`.
+# Modality/Observability themselves live in models/media.py alongside FrameBundle (the
+# output shape they describe) — this module owns the sampling *policy*, not the shapes.
 # --------------------------------------------------------------------------------------
-
-
-class Modality(str, Enum):
-    """Which sensor channel actually carries the signal for this item."""
-
-    VISUAL = "visual"      # signal is in the frames (motion or asymmetry)
-    AUDIO = "audio"        # signal is in speech → Whisper; frames add nothing
-    MIXED = "mixed"        # needs frames AND the patient's spoken/pointing response
-    CONTACT = "contact"    # graded via physical touch / examiner haptics → not on camera
-
-
-class Observability(str, Enum):
-    """How far ordinary video can be trusted for this item. Drives the Verifier's
-    willingness to let a score through vs. routing to `insufficient_evidence`."""
-
-    OBSERVABLE = "observable"          # the graded signal is genuinely on screen / in audio
-    PARTIAL = "partial"                # maneuver is visible but the grade needs the
-                                       # patient's response (report/pointing) too
-    NOT_ASSESSABLE = "not_assessable"  # ordinary video cannot establish this — declare it
 
 
 class SamplingProfile(str, Enum):
@@ -297,56 +282,9 @@ _BLUR_LAPLACIAN_THRESHOLD = 25.0  # variance-of-Laplacian below this → "blurre
 
 
 # --------------------------------------------------------------------------------------
-# Output models (module boundary — see TYPING NOTE in the module docstring).
+# ExtractedFrame / FrameBundle live in models/media.py (imported above) — this module
+# only produces them.
 # --------------------------------------------------------------------------------------
-
-
-class ExtractedFrame(BaseModel):
-    """One sampled frame plus its provenance and quality flags.
-
-    `image_b64` is a base64 JPEG ready to drop into an Anthropic image content block. The
-    `frame_index`/`timestamp_s` pair is what lets the reasoning core order the sequence."""
-
-    frame_index: int = Field(..., description="0-based position within this bundle (temporal order).")
-    timestamp_s: float = Field(..., description="Seconds into the SOURCE FILE this frame was taken.")
-    image_b64: str = Field(..., description="Base64-encoded JPEG bytes (no data: URI prefix).")
-    media_type: str = "image/jpeg"
-    width: int
-    height: int
-    # Quality limitations for this frame — surfaced as evidence limitations downstream so the
-    # Verifier can refuse to call an exam 'normal' on poor-quality capture.
-    quality_flags: list[str] = Field(default_factory=list)
-
-
-class FrameBundle(BaseModel):
-    """The complete, source-attributed extraction result for one item.
-
-    A bundle with `frames == []` is normal and expected for speech items (audio path) and is
-    the correct shape for a NOT_ASSESSABLE item: the metadata still tells downstream code
-    exactly why there is nothing to look at."""
-
-    item_id: str
-    item_name: str
-    source_path: str
-    modality: Modality
-    observability: Observability
-    pose_recommended: bool
-    # Window (seconds, in the source file's own time base) the frames were sampled from.
-    window_start_s: float
-    window_end_s: float
-    frames: list[ExtractedFrame] = Field(default_factory=list)
-    # Human-readable limitations for the whole item (policy note + any extraction issues).
-    limitations: list[str] = Field(default_factory=list)
-
-    @property
-    def assessable_from_video(self) -> bool:
-        """False when this item can never be graded from capture (route to a clinician)."""
-        return self.observability != Observability.NOT_ASSESSABLE
-
-    @property
-    def is_speech_item(self) -> bool:
-        """True when the signal lives in audio and the Listener/Whisper stage owns this item."""
-        return self.modality == Modality.AUDIO
 
 
 # --------------------------------------------------------------------------------------
